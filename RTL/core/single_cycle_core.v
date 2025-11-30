@@ -48,16 +48,16 @@ module single_cycle_core (
         .funct7     (instr[31:25]),
         
         // ALU flags (feedback from datapath)
-        .alu_zero   (alu_zero),     // Connects to the 'zero' output of the datapath.
-        .alu_carry  (alu_carry),    // CORRECTED: Connect to the actual carry flag.
-        .alu_over   (alu_overflow), // CORRECTED: Connect to the actual overflow flag.
-        .alu_neg    (alu_negative), // CORRECTED: Connect to the actual negative flag.
+        .alu_zero   (alu_zero),     
+        .alu_carry  (alu_carry),    
+        .alu_over   (alu_overflow), 
+        .alu_neg    (alu_negative), 
 
         // Control signals (outputs to datapath)
         .result_src (result_src),
         .mem_write  (mem_write),
         .alu_src    (alu_src),
-        .alu_src_a  (alu_src_a),    // CORRECTED: Connect the new control signal.
+        .alu_src_a  (alu_src_a),    
         .reg_write  (reg_write),
         .jump       (jump),
         .imm_src    (imm_src),
@@ -79,7 +79,7 @@ module single_cycle_core (
         .result_src (result_src),
         .pc_src     (pc_src),
         .alu_src    (alu_src),
-        .alu_src_a  (alu_src_a),    // CORRECTED: Connect the new control signal.
+        .alu_src_a  (alu_src_a),   
         .reg_write  (reg_write),
         .imm_src    (imm_src),
         .alu_control(alu_control),
@@ -91,8 +91,8 @@ module single_cycle_core (
         
         // Flag outputs (feedback to control unit)
         .zero       (alu_zero),
-        .carry      (alu_carry),    // CORRECTED: Connect to the new flag output.
-        .overflow   (alu_overflow), // CORRECTED: Connect to the new flag output.
+        .carry      (alu_carry),    
+        .overflow   (alu_overflow), 
         .negative   (alu_negative), // CORRECTED: Connect to the new flag output.
         
         // Debug port passthrough
