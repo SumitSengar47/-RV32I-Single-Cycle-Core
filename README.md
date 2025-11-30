@@ -96,21 +96,15 @@ The testbench loads a hex file containing machine code into the Instruction Memo
 5.  **Run:** Run Behavioral Simulation for 1000ns (or until the program halts).
 6.  **Verify:** Check the waveform for the `Zero` flag and `ALUResult` to confirm the instructions are executing as expected.
 
----
-
 ## 🚀 Future Scope
 * **Pipelining:** Convert the single-cycle design into a **5-stage pipeline** (IF, ID, EX, MEM, WB) to improve clock frequency and instruction throughput.
 * **Hazard Handling:** Implement Forwarding and Stalling units to resolve data and control hazards in the pipelined version.
 * **FPGA Implementation:** Synthesize the design for a Xilinx Artix-7 FPGA and map the I/O to board switches and LEDs.
 * **Peripheral Integration:** Add support for UART or SPI protocols to enable communication with external devices.
 
----
-
 ## 📚 References
 * **Primary Text:** *Digital Design and Computer Architecture: RISC-V Edition* by Sarah L. Harris and David Harris.
 * **ISA Specification:** *The RISC-V Instruction Set Manual, Volume I: Unprivileged ISA*.
-
----
 
 ## 👨‍💻 Author
 **Sumit Kumar Sengar**
