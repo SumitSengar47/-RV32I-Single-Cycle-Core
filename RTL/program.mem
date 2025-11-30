@@ -1,0 +1,43 @@
+// This is a comprehensive verification program for the RISC-V RV32I single-cycle core.
+// It tests instructions from every major type (R, I, S, B, U, J)
+// to provide a final, robust check of the entire integrated design.
+
+// --- Phase 1: U-Type ---
+ABCDE2B7  // lui  x5, 0xABCDE         ; U-Type: Load 0xABCDE000 into x5.
+00000317  // auipc x6, 0             ; U-Type: x6 should get the address of this instruction (0x1004).
+
+// --- Phase 2: I-Type (Setup) ---
+F9C00393  // addi x7, x0, -100       ; I-Type: Setup x7 = -100 for later R-Type tests.
+03200413  // addi x8, x0, 50         ; I-Type: Setup x8 = 50 for later R-Type tests.
+
+// --- Phase 3: R-Type ---
+008384B3  // add  x9, x7, x8         ; R-Type: x9 = x7 + x8 (-100 + 50 = -50).
+40740533  // sub  x10, x8, x7        ; R-Type: x10 = x8 - x7 (50 - (-100) = 150).
+0083A5B3  // slt  x11, x7, x8        ; R-Type: x11 = (x7 < x8) ? 1 : 0. (-100 < 50 is true, so x11=1).
+0083C633  // xor  x12, x7, x8        ; R-Type: x12 = x7 ^ x8.
+
+// --- Phase 4: S-Type and I-Type (Memory) ---
+00A02423  // sw   x10, 8(x0)         ; S-Type: Store x10 (150) to memory address 8.
+00802683  // lw   x13, 8(x0)         ; I-Type: Load value from memory address 8 into x13. Should be 150.
+
+// --- Phase 5: B-Type (Control Flow) ---
+// This branch should be TAKEN because x10 (150) is not equal to x7 (-100).
+00D51663  // bne  x10, x7, BRANCH_TARGET  ; B-Type: Branch to skip the next two "trap" instructions.
+06300713  // addi x14, x0, 99        ; *** TRAP *** This should be SKIPPED. x14 should remain 0.
+06300793  // addi x15, x0, 99        ; *** TRAP *** This should be SKIPPED. x15 should remain 0.
+
+// --- Phase 6: J-Type and I-Type (Jumps) ---
+// BRANCH_TARGET:
+00839863  // addi x16, x0, 1         ; Mark that the branch was taken.
+05400A13  // addi x20, x0, 84        ; Setup a target address for JALR.
+000A0167  // jalr x2, x20, 0         ; I-Type: Jump to address in x20 (84). Link address (PC+4 of this instr) goes to x2.
+06300A93  // addi x21, x0, 99        ; *** TRAP *** This should be SKIPPED by JALR. x21 should remain 0.
+// ... (processor is now at address 0x54, which is 84 in decimal) ...
+008000EF  // jal  x1, END_TARGET     ; J-Type: Jump to the end. Link address (PC+4 of this instr) goes to x1.
+06300B13  // addi x22, x0, 99        ; *** TRAP *** This should be SKIPPED by JAL. x22 should remain 0.
+06300B93  // addi x23, x0, 99        ; *** TRAP *** This should be SKIPPED by JAL. x23 should remain 0.
+
+// --- Phase 7: Final Marker and Halt ---
+// END_TARGET:
+00100C93  // addi x25, x0, 1         ; Mark that the program reached the end successfully.
+FE000EE3  // beq  x0, x0, -4         ; Halt: Infinite loop to stop the processor.
